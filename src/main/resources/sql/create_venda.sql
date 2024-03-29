@@ -1,0 +1,5 @@
+CREATE TABLE venda (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cliente VARCHAR(255) NOT NULL,
+    valor_total DECIMAL(10, 2) NOT NULL
+);
