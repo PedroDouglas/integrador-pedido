@@ -33,8 +33,8 @@ class IntegradorPedidoApplicationTests {
 //		Venda venda = new VendaDao(conn).listarPorId(1).stream().findFirst().get();
 //		System.out.println(venda);
 
-		new ProdutoService().cadastrar((new Produto(1, "celular",
-				"samsung", 1, new BigDecimal(2.00))));
+//		new ProdutoService().cadastrar((new Produto(1, "celular",
+//				"samsung", 1, new BigDecimal(2.00))));
 
 	}
 

@@ -1,6 +1,7 @@
 package br.com.pedrodouglas.integradorpedido.repository;
 
 import br.com.pedrodouglas.integradorpedido.ConnectionFactory;
+import br.com.pedrodouglas.integradorpedido.exception.IntegradorException;
 import br.com.pedrodouglas.integradorpedido.model.Produto;
 import org.springframework.stereotype.Repository;
 
@@ -8,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 @Repository
 public class ProdutoDao {
@@ -28,66 +30,70 @@ public class ProdutoDao {
 
             fecharConexao(conn,ps);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new IntegradorException(e.getMessage());
         }
     }
 
     public List<Produto> listarPorId(Integer id){
         String sql = "select id, nome, descricao , quantidade_disponivel, valor_unitario from produto  where id = ?";
         PreparedStatement ps = null;
-        ResultSet result = null;
-        List<Produto> produtos = null;
+        ResultSet rs = null;
+        List<Produto> produtos = new ArrayList<>();
         ConnectionFactory connectionFactory = new ConnectionFactory();
 
         try {
             conn = connectionFactory.recuperarConexao();
             ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
-            result = ps.executeQuery();
+            rs = ps.executeQuery();
 
-            while(result.next()){
+            while(rs.next()){
 
                 Produto produto = Produto.builder()
-                        .id(result.getInt(1))
-                        .nome(result.getString(2))
-                        .descricao(result.getString(3))
-                        .quantidadeDisponivel(result.getInt(4))
-                        .valorUnitario(result.getBigDecimal(5))
+                        .id(rs.getInt(1))
+                        .nome(rs.getString(2))
+                        .descricao(rs.getString(3))
+                        .quantidadeDisponivel(rs.getInt(4))
+                        .valorUnitario(rs.getBigDecimal(5))
                         .build();
                 produtos.add(produto);
             }
             fecharConexao(conn,ps);
+            rs.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new IntegradorException(e.getMessage());
+        } catch (Exception e){
+            throw new IntegradorException(e.getMessage());
         }
         return  produtos;
     }
     public List<Produto> listar(){
         String sql = "select id, nome, descricao , quantidade_disponivel, valor_unitario from produto ";
         PreparedStatement ps = null;
-        ResultSet result = null;
-        List<Produto> produtos = null;
+        ResultSet rs = null;
+        List<Produto> produtos = new ArrayList<>();
         ConnectionFactory connectionFactory = new ConnectionFactory();
 
         try {
             conn = connectionFactory.recuperarConexao();
             ps = conn.prepareStatement(sql);
-            result = ps.executeQuery();
+            rs = ps.executeQuery();
 
-            while(result.next()){
+            while(rs.next()){
 
                 Produto produto = Produto.builder()
-                        .id(result.getInt(1))
-                        .nome(result.getString(2))
-                        .descricao(result.getString(3))
-                        .quantidadeDisponivel(result.getInt(4))
-                        .valorUnitario(result.getBigDecimal(5))
+                        .id(rs.getInt(1))
+                        .nome(rs.getString(2))
+                        .descricao(rs.getString(3))
+                        .quantidadeDisponivel(rs.getInt(4))
+                        .valorUnitario(rs.getBigDecimal(5))
                         .build();
                 produtos.add(produto);
             }
+            rs.close();
             fecharConexao(conn,ps);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new IntegradorException(e.getMessage());
         }
         return  produtos;
     }
@@ -106,7 +112,7 @@ public class ProdutoDao {
 
             fecharConexao(conn, ps);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new IntegradorException(e.getMessage());
         }
     }
 
@@ -122,7 +128,7 @@ public class ProdutoDao {
             ps.execute();
             fecharConexao(conn,ps);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new IntegradorException(e.getMessage());
         }
 
 
@@ -134,7 +140,7 @@ public class ProdutoDao {
             ps.close();
             conn.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new IntegradorException(e.getMessage());
         }
     }
 

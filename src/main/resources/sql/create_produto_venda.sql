@@ -1,7 +1,7 @@
 CREATE TABLE produto_venda (
-    venda_id INT,
-    produto_id INT,
+    id_venda INT,
+    id_produto INT,
     quantidade INT,
-    FOREIGN KEY (venda_id) REFERENCES venda(id),
-    FOREIGN KEY (produto_id) REFERENCES produto(id)
+    FOREIGN KEY (id_venda) REFERENCES venda(id),
+    FOREIGN KEY (id_produto) REFERENCES produto(id)
 );
