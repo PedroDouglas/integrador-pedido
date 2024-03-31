@@ -65,6 +65,32 @@ public class ProdutoVendaDao {
 
         return produtosVenda;
     }
+    public List<ProdutoVenda> listarPorIdProduto(int idProduto) {
+        String sql = "SELECT id_produto, id_venda, quantidade FROM produto_venda WHERE id_produto = ?";
+        List<ProdutoVenda> produtosVenda = new ArrayList<>();
+        ConnectionFactory connectionFactory = new ConnectionFactory();
+
+        try {
+            conn = connectionFactory.recuperarConexao();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, idProduto);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                ProdutoVenda produtoVenda = new ProdutoVenda();
+                produtoVenda.setIdproduto(rs.getInt(1) );
+                produtoVenda.setIdvenda(rs.getInt(2));
+                produtoVenda.setQuantidade(rs.getInt(3));
+                produtosVenda.add(produtoVenda);
+            }
+            rs.close();
+            fecharConexao(conn, ps);
+        } catch (SQLException e) {
+            throw new IntegradorException(e.getMessage());
+        }
+
+        return produtosVenda;
+    }
 
     public List<ProdutoVenda> listarPorIdProdutoEIdVenda(Integer idProduto, Integer idVenda) {
         String sql = "SELECT id_produto, id_venda, quantidade FROM produto_venda WHERE id_produto = ? AND id_venda = ?";

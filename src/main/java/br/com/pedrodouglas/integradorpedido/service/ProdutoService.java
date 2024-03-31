@@ -2,7 +2,9 @@ package br.com.pedrodouglas.integradorpedido.service;
 
 import br.com.pedrodouglas.integradorpedido.exception.IntegradorException;
 import br.com.pedrodouglas.integradorpedido.model.Produto;
+import br.com.pedrodouglas.integradorpedido.model.ProdutoVenda;
 import br.com.pedrodouglas.integradorpedido.repository.ProdutoDao;
+import br.com.pedrodouglas.integradorpedido.repository.ProdutoVendaDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,8 @@ import java.util.Objects;
 @Service
 public class ProdutoService {
     @Autowired private ProdutoDao produtoDao;
+
+    @Autowired private ProdutoVendaDao produtoVendaDao;
     public void cadastrar(Produto produto){
         if (produto.getQuantidadeDisponivel().compareTo(0) < 0){
             throw new IntegradorException("Não é possível cadastrar produto sem estoque!", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -39,6 +43,12 @@ public class ProdutoService {
                 .findFirst()
                 .map(Produto::getQuantidadeDisponivel)
                 .orElse(0);
+
+        ProdutoVenda produtoVenda = produtoVendaDao.listarPorIdProduto(id).stream().findFirst().orElse(null);
+
+        if (Objects.nonNull(produtoVenda)){
+            throw new IntegradorException("Não é possível deletar produto com venda.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
         if (qtdEstoque > 0) {
             throw new IntegradorException("Não é possível deletar produto com estoque.", HttpStatus.INTERNAL_SERVER_ERROR);

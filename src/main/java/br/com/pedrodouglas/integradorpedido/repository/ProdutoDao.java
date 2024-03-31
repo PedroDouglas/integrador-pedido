@@ -27,7 +27,7 @@ public class ProdutoDao {
             ps.setString(2, produto.getDescricao());
             ps.setInt(3, produto.getQuantidadeDisponivel());
             ps.setBigDecimal(4, produto.getValorUnitario());
-
+            ps.execute();
             fecharConexao(conn,ps);
         } catch (SQLException e) {
             throw new IntegradorException(e.getMessage());
